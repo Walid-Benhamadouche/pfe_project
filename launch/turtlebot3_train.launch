@@ -1,0 +1,6 @@
+<launch>
+    <!-- This version uses the openai_ros environments -->
+    <rosparam command="load" file="$(find pfe_project)/config/config.yaml"/>
+    <!-- Launch the training system -->
+    <node pkg="pfe_project" name="turtlebot3_pfe_project" type="node_init.py" output="screen"/>
+</launch>
