@@ -1,12 +1,12 @@
 pfe: #namespace
 
     path: '/home/desire/catkin_ws/src/pfe_project'
-    laser_to_skip: 90 # The number of laser scans to skip scan = total_scans % laser_to_skip
+    laser_to_skip: 5 # The number of laser scans to skip scan = total_scans % laser_to_skip
 
     # q_learning parameters
     naction: 3
-    alpha: 0.6
-    gamma: 0.7
+    alpha: 0.4
+    gamma: 0.95
     epsilon: 0.75
     epsilon_discount: 0.998
     nepisodes: 1000

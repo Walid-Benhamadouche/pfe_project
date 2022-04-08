@@ -39,16 +39,23 @@ class RobotNameEnv:
     # taking only a finite number of laser scans
     def _discretize_scan_observation(self, mod):
         disc_scan = []
-        for i in range(len(self._laser)):
-            if i % mod == 0:
-                if self._laser[i+45] != float('+inf'):
-                    disc_scan.append(self._laser[i+45])
-                else:
-                    disc_scan.append(100)
-        if self._laser[0] != float('+inf'):
-            disc_scan.append(self._laser[0])
-        else:
-            disc_scan.append(100)
+        #for i in range(len(self._laser)):
+        #    if i % mod == 0:
+        #        if self._laser[i+45] != float('+inf'):
+        #            disc_scan.append(self._laser[i+45])
+        #        else:
+        #            disc_scan.append(3)
+        #if self._laser[0] != float('+inf'):
+        #    disc_scan.append(self._laser[0])
+        #else:
+        #    disc_scan.append(3)
+        for i in range(mod):
+            temp = self._laser[-40+i*25]
+            if temp != float('+inf'):
+                disc_scan.append(temp)
+            else:
+                disc_scan.append(3)
+        
         return disc_scan
 
     # takes curent laser scans and return the current state
@@ -74,7 +81,7 @@ class RobotNameEnv:
     # checks if the episode is done (hit an opstacle for example)
     def _is_done(self, state):
         for i in state:
-            if i < 0.24:
+            if i < 0.19:
                 self._reward = -rospy.get_param("/pfe/end_episode_reward")
                 return True
         if self._number_of_steps == 1000:
@@ -126,10 +133,12 @@ class RobotNameEnv:
     def step(self, action):
         mv = Twist()
         if action == 0:
-            mv.linear.x = 0.15
+            mv.linear.x = 0.10
         elif action == 1:
+            mv.linear.x = 0.035
             mv.angular.z =(10* math.pi / 180.)
         else:
+            mv.linear.x = 0.035
             mv.angular.z =(-10* math.pi / 180.)
         self._cmd_vel_pub.publish(mv)
         time.sleep(0.2)
@@ -137,6 +146,7 @@ class RobotNameEnv:
 
         state = self._calculat_state() 
         done = self._is_done(state)
+        print(state)
         reward = self._calculat_reward(action, done)
         return state, reward, done
 
